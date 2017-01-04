@@ -4,32 +4,24 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace PrismDeNaviWithoutNaviPage.ViewModels
 {
-    public class MainPageViewModel : BindableBase, INavigationAware
+    public class MainPageViewModel : BindableBase
     {
-        private string _title;
-        public string Title
+        private INavigationService _navigationservice;
+        public ICommand GoSubCommand { get; }
+
+        public MainPageViewModel(INavigationService navigationService)
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            _navigationservice = navigationService;
+            GoSubCommand = new DelegateCommand(GoSub);
         }
 
-        public MainPageViewModel()
+        async private void GoSub()
         {
-
-        }
-
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-
-        }
-
-        public void OnNavigatedTo(NavigationParameters parameters)
-        {
-            if (parameters.ContainsKey("title"))
-                Title = (string)parameters["title"] + " and Prism";
+            await _navigationservice.NavigateAsync("SubPage");
         }
     }
 }
